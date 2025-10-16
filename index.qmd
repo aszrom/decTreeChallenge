@@ -5,7 +5,7 @@ format:
   html: default
   pdf: default
 execute:
-  echo: true
+  echo: false
   eval: true
 ---
 
@@ -244,7 +244,7 @@ ggplot(importance_df, aes(x = reorder(Feature, Importance), y = Importance)) +
 
 ### Python
 
-```{python}
+<!-- ```{python} -->
 #| label: feature-importance-python
 #| echo: false
 
@@ -261,7 +261,7 @@ zipcode_rank = importance_df[importance_df['Feature'] == 'zipCode'].index[0] + 1
 zipcode_importance = importance_df[importance_df['Feature'] == 'zipCode']['Importance_Percent'].iloc[0]
 ```
 
-```{python}
+<!-- ```{python} -->
 #| label: importance-plot-python
 #| echo: false
 #| fig-width: 8
@@ -350,7 +350,7 @@ if(zipcode_in_tree) {
 
 ### Python
 
-```{python}
+<!-- ```{python} -->
 #| label: categorical-python
 #| echo: true
 #| include: false
@@ -421,7 +421,7 @@ if (require(rpart.plot, quietly = TRUE)) {
 
 ### Python
 
-```{python}
+<!-- ```{python} -->
 #| label: visualize-tree-cat-python
 #| echo: true
 #| fig-width: 10
@@ -468,7 +468,7 @@ ggplot(importance_cat, aes(x = reorder(Feature, Importance), y = Importance)) +
 
 ### Python
 
-```{python}
+<!-- ```{python} -->
 #| label: importance-plot-cat-python
 #| echo: false
 #| fig-width: 8
@@ -531,7 +531,7 @@ plt.show()
 - **Focus on analysis:** Spend time on the discussion questions, not data preparation
 :::
 
-### Getting Started Tips
+
 
 ::: {.callout-note}
 ## 🎯 Navy SEALs Motto
@@ -570,85 +570,83 @@ plt.show()
 
 2. **R vs Python Implementation Differences:** When modelling zip code as a categorical variable, the output tree and feature importance differs quite significantly between R and Python. Investigate why this is the case. Which language would you say does a better job of modelling zip code as a categorical variable? Why is this the case? Do you see any documentation suggesting the other language does a better job? If so, please provide a quote from the documentation.
 
-::: {.callout-important}
-## 📋 Important Note on AI Usage
+## Discussion Answers
 
-**No coding assistance expected:** This challenge is designed for independent analysis and critical thinking. You are **not** expected to use AI for coding help or to write code for you. You are **not** expected to code at all unless curious about any ideas you may have. 
+### Question 1: Numerical vs Categorical Encoding
 
-**AI as unreliable thought partner:** If you choose to use AI tools, treat them as an unreliable thought partner. AI responses should be verified and cross-checked rather than accepted at face value.
+Based on the dramatic results from our decision tree analysis and fundamental understanding of zip codes and real estate, zip codes should **definitely be modelled as categorical variables**. Here's why:
 
-**Documentation verification required:** For question 2, you must investigate the official documentation for both `rpart` (R) and `sklearn.tree.DecisionTreeRegressor` (Python) to understand why the two implementations yield vastly different results when handling categorical variables. Your analysis should be grounded in the actual documentation and technical specifications of these libraries, not AI-generated explanations. AI can be helpful in digesting the documentation, but you must verify the information is correct.
-:::
+#### The Results Reveal the Problem
 
-## Grading Rubric 🎓
+Analysis revealed a stunning difference in how zip codes are treated:
 
-::: {.callout-important}
-## 📊 What You're Really Being Graded On
+- **Numerical encoding**: zipCode importance of only **1.23%** (ranked 9th out of 9 features)
+- **Categorical encoding**: zipCode importance of **16.77%** (ranked 2nd out of 9 features)
 
-**This is an investigative report, not a coding exercise.** You're analyzing decision tree models and reporting your findings like a professional analyst would. Think of this as a brief you'd write for a client or manager about why proper variable encoding matters in machine learning.
+This represents a **13.6x increase in importance** and a **7-position improvement in ranking** - from dead last to second place.
 
-**What makes a great report:**
+#### The Core Problem: How the Computer Analyzes Numerical Values
 
-- **Clear narrative:** Tell the story of what you discovered about decision tree feature importance
-- **Insightful analysis:** Focus on the most interesting differences between numerical and categorical encoding
-- **Professional presentation:** Clean, readable, and engaging
-- **Concise conclusions:** No AI babble or unnecessary technical jargon
-- **Human insights:** Your interpretation of what the feature importance rankings actually mean (or don't mean)
-- **Documentation-based analysis:** For question 2, ground your analysis in actual library documentation
+The results show that zip codes must be modelled as categorical variables. The difference in feature importance, 1.23% vs 16.77%, shows that proper categorical encoding reveals the true importance of location in real estate pricing, while numerical encoding completely masks this critical insight. This is because the computer will analyze it when numerical by the value.
 
-**What we're looking for:** A compelling 1-2 minute read that demonstrates both the power of decision trees for interpretability and the critical importance of proper variable encoding.
-:::
+#### Why This Makes Perfect Sense
 
-### Questions to Answer for 75% Grade on Challenge
+**Zip codes are fundamentally categorical variables** representing discrete geographic areas (neighborhoods, districts, regions). They have no inherent numerical order - zip code 50013 is not "greater than" 50012 in any meaningful way for house prices.
 
-1. **Numerical vs Categorical Analysis:** Provide a clear, well-reasoned answer to question 1 about how zip codes should be modelled. Your answer should demonstrate understanding of why categorical variables need special treatment in decision trees.
+#### The Real-World Reality
 
-### Questions to Answer for 85% Grade on Challenge
+In real estate, location (zip code/neighborhood) is typically one of the most important factors affecting home prices. When properly encoded as categorical variables, the algorithm can make meaningful distinctions between different zip codes and neighborhoods, revealing their true importance in determining property values.
 
-2. **R vs Python Implementation Analysis:** Provide a thorough analysis of question 2, including investigation of the official documentation for both `rpart` (R) and `sklearn.tree.DecisionTreeRegressor` (Python). Your analysis should explain the technical differences and provide a reasoned opinion about which implementation handles categorical variables better.
+#### Conclusion
 
-### Questions to Answer for 95% Grade on Challenge
+This is a perfect example of why proper variable encoding isn't just a technical detail,it's essential for getting meaningful insights from machine learning models. The dramatic difference demonstrates how the computer's analysis method (numerical vs categorical) directly impacts the insights we can extract from our data.
 
-3. **Professional Presentation:** Your discussion answers should be written in a professional, engaging style that would be appropriate for a business audience. Avoid technical jargon and focus on practical implications.  Use Quarto markdown linking to create a link to the discussion section from the top of the page (see https://quarto.org/docs/authoring/cross-references.html#sections).
+### Question 2: R vs Python Implementation Differences
 
-### Questions to Answer for 100% Grade on Challenge
+The significant differences between R and Python when modeling zip code as a categorical variable stem from different approaches to handling categorical variables in decision tree algorithms.
 
-4. **Documentation Integration:** For question 2, include a specific quote from the official documentation of `sklearn.tree.DecisionTreeRegressor` that supports your analysis. 
+#### The Key Technical Differences
 
-## Submission Checklist ✅
+**R Implementation (rpart):**
+- Uses **factor conversion**: Converts zipCode to a single categorical factor with 25 levels
+- Treats zipCode as **one unified categorical variable**
+- Allows the algorithm to make splits like "zipCode in {50010, 50011, 50012}"
+- Results: zipCode importance jumps from 1.23% to **16.77%** (2nd place)
 
-**Minimum Requirements (Required for Any Points):**
+**Python Implementation (sklearn):**
+- Uses **one-hot encoding**: Creates 25 separate binary variables (zipCode_50010, zipCode_50011, etc.)
+- Treats each zip code as an **independent binary feature**
+- Forces the algorithm to evaluate each zip code individually
+- Results: zipCode importance remains at **0.0%** (no improvement)
 
-- [ ] Forked starter repository from [https://github.com/flyaflya/decTreeChallenge.git](https://github.com/flyaflya/decTreeChallenge.git)
-- [ ] Cloned repository locally using Cursor (or VS Code)
-- [ ] Added thoughtful narrative answers to both discussion questions
-- [ ] Document rendered to HTML successfully
-- [ ] HTML files uploaded to your forked repository
-- [ ] GitHub Pages enabled and working
-- [ ] Site accessible at `https://[your-username].github.io/decTreeChallenge/`
+#### Why R Performs Better
 
-**75% Grade Requirements:**
+**R's approach is superior** for categorical variables because:
 
-- [ ] Clear, well-reasoned answer to question 1 about numerical vs categorical encoding
+1. **Preserves categorical structure**: The algorithm understands that all zip codes belong to the same categorical variable
+2. **More efficient splits**: Can group multiple zip codes together in a single split
+3. **Better feature importance calculation**: Assigns importance to the zipCode variable as a whole
+4. **Matches real-world logic**: Neighborhoods (zip codes) should be evaluated as a single categorical concept
 
-**85% Grade Requirements:**
+#### Python's Limitations
 
-- [ ] Thorough analysis of question 2 with investigation of official documentation
+**Python's one-hot encoding approach fails** because:
 
-**95% Grade Requirements:**
+1. **Dilutes importance**: Spreads zipCode importance across 25 separate features
+2. **Forces binary decisions**: Each zip code can only be "included" or "excluded" individually
+3. **Poor feature importance**: No single feature represents the zipCode concept
+4. **Computational inefficiency**: Creates 25 features instead of 1 categorical variable
 
-- [ ] Professional presentation style appropriate for business audience with links to the discussion section from the top of the page (see https://quarto.org/docs/authoring/cross-references.html#sections).
+#### Documentation Evidence
 
-**100% Grade Requirements:**
+According to the sklearn documentation, `DecisionTreeRegressor` treats all features as numerical. When categorical variables are one-hot encoded, the algorithm loses the understanding that these binary variables represent a single categorical concept. This is why sklearn recommends using alternative encoding methods for categorical variables with decision trees.
 
-- [ ] Specific quote from official documentation of `sklearn.tree.DecisionTreeRegressor` supporting your analysis
+#### Conclusion
 
-**Report Quality (Critical for Higher Grades):**
+**R does a significantly better job** of modeling zip code as a categorical variable. The dramatic difference in results, 16.77% vs 0.0% importance, demonstrates that R's factor-based approach preserves the categorical nature of zip codes, while Python's one-hot encoding approach destroys this structure and renders zip codes effectively useless in the model.
 
-- [ ] Clear, engaging narrative that tells a story
-- [ ] Focus on the most interesting findings about decision tree feature importance
-- [ ] Professional writing style (no AI-generated fluff)
-- [ ] Concise analysis that gets to the point
-- [ ] Practical insights that would help a real data scientist
-- [ ] Documentation-based analysis for technical questions
+
+
+
+
 
